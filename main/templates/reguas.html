@@ -1,0 +1,101 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+<div class="wrapper">
+    {% include 'menu.html' %}
+    <div class="main-panel">
+        <div class="content">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col">
+                        <form method="post" id="form_painel">
+                            <div id="csrf_painel">{% csrf_token %}</div>
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Classificação & Valores
+                                        <div style="float: right;">
+                                            <input type="text" list="categorias" class="search-form" autocomplete="off" name="q" value="{{ request.GET.q }}" placeholder="Pesquisar...">
+                                            <datalist id="categorias">
+                                                <option value="Colaborador">
+                                                <option value="Coordenador">
+                                                <option value="Gerente">
+                                            </datalist>
+                                            <button type="submit" class="btn btn-success" id="search_regua"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                            {% if not formacoes %}
+                                                <button type="submit" class="btn btn-success">Salvar</button>
+                                            {% endif %}
+                                        </div>
+                                    </h4>
+                                </div>
+                                <div class="content">
+                                    <div class="table-full-width">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 25%;">Régua</th>
+                                                    <th style="width: 20%;">Mínimo</th>
+                                                    <th style="width: 20%;">Máximo</th>
+                                                    <th style="width: 20%;">Valor</th>
+                                                    <th style="width: 15%;">Cadastro</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in classificacao %}
+                                                    <tr>
+                                                        <td>{{i.regua.regua}}</td>  
+                                                        <td><input style="margin-left: -1rem" type="text" name="cMinimo" value="{{i.minimo|floatformat:2}}"></td>
+                                                        <td><input style="margin-left: -1rem" type="text" name="cMaximo" value="{{i.maximo|floatformat:2}}"></td>
+                                                        <td><input style="margin-left: -1rem" type="text" name="cValor" value="{{i.valor|floatformat:2}}"></td>
+                                                        <td>{{i.cadastro|date:"SHORT_DATE_FORMAT"}}</td>   
+                                                    </tr>                                         
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Categorias</h4>
+                                </div>
+                                <div class="content">
+                                    <div class="table-full-width">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 75%;">Régua</th>
+                                                    <th style="width: 25%;">Cadastro</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in niveis %}
+                                                    <tr>
+                                                        <td>{{i.regua}}</td>  
+                                                        <td>{{i.cadastro|date:"SHORT_DATE_FORMAT"}}</td>   
+                                                    </tr>                                         
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

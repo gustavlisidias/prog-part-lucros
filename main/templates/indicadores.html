@@ -1,0 +1,197 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+<div class="wrapper">
+    {% include 'menu.html' %}
+    <div class="main-panel">
+        <div class="content">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col">
+                        <form method="post" id="form_funcionario">
+                            <div id="csrf_funcionario">{% csrf_token %}</div>
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Funcionarios 
+                                        <div style="float: right;">
+                                            <input type="text" class="search-form" autocomplete="off" name="q" value="{{ request.GET.q }}" placeholder="Pesquisar...">
+                                            <button type="submit" class="btn btn-success" id="search_funcionario"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                            {% if not formacoes %}
+                                                <button type="submit" class="btn btn-success">Salvar</button>
+                                            {% endif %}
+                                        </div>
+                                    </h4>
+                                </div>
+                                <div class="content">
+                                    <div class="table-full-width">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Matrícula</th>
+                                                    <th>Nome</th>
+                                                    <th>Cargo</thstyle=>
+                                                    <th>Setor</th>
+                                                    <th>Filial</th>
+                                                    <th>Incio</th>
+                                                    <th>Fim</th>
+                                                    <th>Atingido (%)</th>
+                                                    <th>Salário (R$)</th>
+                                                    {% if not formacoes %}
+                                                        <th style="width: 5%;"></th>
+                                                    {% endif %}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in funcionarios %}
+                                                    <tr>
+                                                        <td>{{i.codigo}}</td>  
+                                                        <td>{{i.nome}}</td>  
+                                                        <td>{{i.cargo.cargo}}</td> 
+                                                        <td>{{i.cargo.setor.setor}}</td> 
+                                                        <td>{{i.cargo.setor.filial}}</td> 
+                                                        <td><input type="date" name="nInicioContrato" value="{{i.inicio|date:"Y-m-d"}}" style="width: 80%"></td>
+                                                        <td><input type="date" name="nFinalContrato" value="{{i.fim|date:"Y-m-d"}}" style="width: 80%"></td>
+                                                        <td><input type="text" name="nMargemIndividual" value="{{i.margem|floatformat:2}}"></td>
+                                                        <td><input type="text" name="nSalario" value="{{i.salario|floatformat:2}}"></td>
+                                                        {% if not formacoes %}
+                                                            <td><button type="submit" class="btn-table btn-outline-danger" title="Deletar {{i.nome}}" name="dFunc" value="{{i.id}}"><i class="fa-solid fa-trash"></i></button></td>
+                                                        {% endif %}
+                                                    </tr>                                         
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% if not formacoes %}
+                                        <div class="footer border-top py-2">
+                                            <div class="stats">
+                                                <button type="button" class="btn btn-modal btn-success" title="Adicionar funcionário" data-toggle="modal" data-target="#addFuncionario">+</button>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <form method="post" id="form_orcamento">
+                            <div id="csrf_orcamento">{% csrf_token %}</div>
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Orçamentos 
+                                        <div style="float: right;">
+                                            <input type="text" class="search-form" autocomplete="off" name="p" value="{{ request.GET.p }}" placeholder="Pesquisar...">
+                                            <button type="submit" class="btn btn-success" id="search_orcamento"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                            {% if not formacoes %}
+                                                <button type="submit" class="btn btn-success">Salvar</button>
+                                            {% endif %}
+                                        </div>
+                                    </h4>
+                                </div>
+                                <div class="content">
+                                    <div class="table-full-width">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 25%;">Setor</th>
+                                                    <th style="width: 25%;">Filial</th>
+                                                    <th style="width: 25%;">Atingido (%)</th>
+                                                    <th style="width: 25%;">Cadastro</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in orcamentos %}
+                                                    <tr>
+                                                        <td>{{i.setor.setor}}</td>  
+                                                        <td>{{i.setor.filial}}</td>  
+                                                        <td><input type="text" name="nMargemOrcamento" value="{{i.margem|floatformat:2}}"></td>  
+                                                        <td>{{i.cadastro|date:"SHORT_DATE_FORMAT"}}</td>   
+                                                    </tr>                                         
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Margens Únicas 
+                                        {% if not formacoes %}
+                                            <button type="submit" class="btn btn-success" style="float: right">Salvar</button>
+                                        {% endif %}
+                                    </h4>
+                                </div>
+                                <div class="content">
+                                    <div class="table-full-width">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 50%;">Regra</th>
+                                                    <th style="width: 25%;">Atingido (%)</th>
+                                                    <th style="width: 25%;">Cadastro</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in margens %}
+                                                    <tr>
+                                                        <td>{{i.regra.regra}}</td>  
+                                                        <td><input type="text" name="nMargemUnica" value="{{i.margem|floatformat:2}}"></td> 
+                                                        <td>{{i.cadastro|date:"SHORT_DATE_FORMAT"}}</td>   
+                                                    </tr>                                         
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="modal" id="addFuncionario" tabindex="-1" role="dialog" aria-labelledby="addFuncionarioLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addFuncionarioLabel">Adicionar Funcionário</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="aFuncNome" placeholder="Nome Completo" class="form-control mb-2" required>
+                    <input type="text" name="aFuncCodigo" placeholder="Matrícula" class="form-control mb-2" required>
+                    <select name="aFuncCargo" class="form-control mb-2" required>
+                        <option selected hidden value="">Selecione cargo</option>
+                        {% for i in cargos %}
+                            <option value="{{i.id}}">{{i}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="aFuncMargem" placeholder="Margem" class="form-control mb-2" required>
+                    <input type="text" name="aFuncSalario" placeholder="Salario" class="form-control mb-2" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Adicionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock content %}

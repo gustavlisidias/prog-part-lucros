@@ -1,0 +1,229 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+<div class="wrapper">
+    {% include 'menu.html' %}
+    <div class="main-panel">
+        <div class="content">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Pesos e Metas 
+                                        {% if not formacoes %}
+                                            <button type="submit" class="btn btn-success" style="float: right">Salvar</button>
+                                        {% endif %}
+                                    </h4>
+                                </div>
+                                <div class="content">
+                                    <div class="table-full-width">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 25%;">Regra</th>
+                                                    <th style="width: 25%;">Peso (%)</th>
+                                                    <th style="width: 25%;">Meta (%)</th>
+                                                    <th style="width: 25%;">Cadastro</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in regras %}
+                                                    <tr>
+                                                        <td>{{i.regra}}</td>  
+                                                        <td><input type="text" name="nPeso" value="{{i.peso|floatformat:2}}" style="margin-left: -1rem;"></td>  
+                                                        <td><input type="text" name="nMeta" value="{{i.meta|floatformat:2}}" style="margin-left: -1rem;"></td>   
+                                                        <td>{{i.cadastro|date:"SHORT_DATE_FORMAT"}}</td>   
+                                                    </tr>                                         
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <form method="get">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Cargos 
+                                        <div style="float: right;">
+                                            <input type="text" class="search-form" autocomplete="off" name="q" value="{{ request.GET.q }}" placeholder="Pesquisar...">
+                                            <button type="submit" class="btn btn-success"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                        </div>
+                                    </h4>
+                                </div>
+                                <div class="content">
+                                    <div class="table-full-width">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 15%;">Cargo</th>
+                                                    <th style="width: 20%;">Setor</th>
+                                                    <th style="width: 25%;">Filial</th>
+                                                    <th style="width: 15%;">Régua</th>
+                                                    <th style="width: 20%;">Cadastro</th>
+                                                    <th style="width: 5%;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in cargos %}
+                                                    <tr>
+                                                        <td>{{i.cargo}}</td>  
+                                                        <td>{{i.setor.setor}}</td>  
+                                                        <td>{{i.setor.filial}}</td>  
+                                                        <td>{{i.regua}}</td> 
+                                                        <td>{{i.cadastro|date:"SHORT_DATE_FORMAT"}}</td>  
+                                                        {% if not formacoes %}
+                                                            <td><button type="submit" class="btn-table btn-outline-danger" title="Deletar cargo {{i.cargo}} - {{i.setor.setor}}" name="dCargo" value="{{i.id}}"><i class="fa-solid fa-trash"></i></button></td> 
+                                                        {% endif %}
+                                                    </tr>                                         
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% if not formacoes %}
+                                        <div class="footer border-top py-2">
+                                            <div class="stats">
+                                                <button type="button" class="btn btn-modal btn-success" title="Adicionar Cargo" data-toggle="modal" data-target="#addCargo">+</button>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <form method="get">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Setores 
+                                        <div style="float: right;">
+                                            <input type="text" class="search-form" autocomplete="off" name="p" value="{{ request.GET.p }}" placeholder="Pesquisar...">
+                                            <button type="submit" class="btn btn-success"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                        </div>
+                                    </h4>
+                                </div>
+                                <div class="content">
+                                    <div class="table-full-width">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 15%;">Centro de Custo</th>
+                                                    <th style="width: 20%;">Setor</th>
+                                                    <th style="width: 25%;">Filial</th>
+                                                    <th style="width: 15%;">Tipo</th>
+                                                    <th style="width: 20%;">Cadastro</th>
+                                                    <th style="width: 5%;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for i in setores %}
+                                                    <tr>
+                                                        <td>{{i.centro_custo}}</td> 
+                                                        <td>{{i.setor}}</td>                                                           
+                                                        <td>{{i.filial.nome}}</td>  
+                                                        <td>{{i.tipo}}</td>  
+                                                        <td>{{i.cadastro|date:"SHORT_DATE_FORMAT"}}</td>   
+                                                        {% if not formacoes %}
+                                                            <td><button type="submit" class="btn-table btn-outline-danger" title="Deletar setor {{i.setor}}" name="dSetor" value="{{i.id}}"><i class="fa-solid fa-trash"></i></button></td>
+                                                        {% endif %} 
+                                                    </tr>                                         
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% if not formacoes %}
+                                        <div class="footer border-top py-2">
+                                            <div class="stats">
+                                                <button type="button" class="btn btn-modal btn-success" title="Adicionar Setor" data-toggle="modal" data-target="#addSetor">+</button>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="modal" id="addCargo" tabindex="-1" role="dialog" aria-labelledby="addCargoLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCargoLabel">Adicionar Cargo</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="aCargoNome" placeholder="Cargo" class="form-control mb-2" required>
+                    <select name="aCargoSetor" class="form-control mb-2" required>
+                        <option selected hidden value="">Selecione Setor</option>
+                        {% for i in setores %}
+                            <option value="{{i.id}}">{{i}}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="aCargoRegua" class="form-control" required>
+                        <option selected hidden value="">Selecione Régua</option>
+                        {% for i in reguas %}
+                            <option value="{{i.id}}">{{i.regua}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Adicionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="modal" id="addSetor" tabindex="-1" role="dialog" aria-labelledby="addSetorLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSetorLabel">Adicionar Setor</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="aSetorNome" placeholder="Setor" class="form-control mb-2" required>
+                    <input type="text" name="aSetorCentroCusuto" placeholder="Centro de Custo" class="form-control mb-2" required>  
+                    <select name="aSetorFilial" class="form-control mb-2" required>
+                        <option selected hidden value="">Selecione Filial</option>
+                        {% for i in filiais %}
+                            <option value="{{i.id}}">{{i.nome}}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="aSetorTipo" class="form-control" required>
+                        <option selected hidden value="">Selecione Tipo</option>
+                        <option value="R">Receita</option>
+                        <option value="D">Despesa</option>
+                    </select>                  
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Adicionar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock content %}

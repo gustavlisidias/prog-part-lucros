@@ -1,0 +1,96 @@
+{% load static %}
+<div class="sidebar" data-color="green" data-image="">
+    <div class="sidebar-wrapper">
+        <div class="logo">
+            <a class="simple-text">Programa de Participação de Resultados</a>
+        </div>
+        <ul class="nav">
+            {% if request.get_full_path == '/' %}
+                <li class="active">
+                    <a href="{% url 'inicio' %}">
+                        <i class="fa-solid fa-house"></i>
+                        <p>Painel</p>
+                    </a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'inicio' %}">
+                        <i class="fa-solid fa-house"></i>
+                        <p>Painel</p>
+                    </a>
+                </li>
+            {% endif %}
+            {% if 'indicadores' in request.get_full_path %}
+                <li class="active">
+                    <a href="{% url 'indicadores' %}">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        <p>Indicadores</p>
+                    </a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'indicadores' %}">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        <p>Indicadores</p>
+                    </a>
+                </li>
+            {% endif %}
+            {% if 'cadastros' in request.get_full_path %}
+                <li class="active">
+                    <a href="{% url 'cadastros' %}">
+                        <i class="fa-solid fa-database"></i>
+                        <p>Cadastros</p>
+                    </a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'cadastros' %}">
+                        <i class="fa-solid fa-database"></i>
+                        <p>Cadastros</p>
+                    </a>
+                </li>
+            {% endif %}
+            {% if request.user.is_superuser %}
+                {% if 'reguas' in request.get_full_path %}
+                    <li class="active">
+                        <a href="{% url 'reguas' %}">
+                            <i class="fa-solid fa-list-ol"></i>
+                            <p>Réguas</p>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'reguas' %}">
+                            <i class="fa-solid fa-list-ol"></i>
+                            <p>Réguas</p>
+                        </a>
+                    </li>
+                {% endif %}            
+                {% if 'historico' in request.get_full_path %}
+                    <li class="active">
+                        <a href="{% url 'historico' %}">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <p>Histórico</p>
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'historico' %}">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            <p>Histórico</p>
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}
+            <li>
+                <a href="{% url 'sair' %}">
+                    <i class="fa-solid fa-power-off"></i>
+                    <p>Sair</p>
+                </a>
+            </li>
+            <li class="menu-footer">
+                <small>Colorado Comércio de Máquinas Agrícolas LTDA - 2022</small>
+            </li>
+        </ul>
+    </div>
+</div>

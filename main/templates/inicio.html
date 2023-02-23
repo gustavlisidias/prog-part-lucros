@@ -1,0 +1,84 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+
+<div class="wrapper">
+    {% include 'menu.html' %}
+    <div class="main-panel">
+        <div class="content">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col">
+                        <form method="post" id="form_painel">
+                            <div id="csrf_painel">{% csrf_token %}</div>
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title">Bem-vindo, {{request.user.first_name}} {{request.user.last_name}}</h4>
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                                <p class="text-danger">{{ message }}</p>
+                                            {% endfor %}
+                                        {% endif %}
+                                        <div style="float: right;">
+                                            <input type="text" class="search-form" autocomplete="off" name="q" value="{{ request.GET.q }}" placeholder="Pesquisar...">
+                                            <button type="submit" class="btn btn-success" id="search_painel" title="Procurar"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                            <button type="submit" class="btn btn-success" id="save_painel" title="Salvar Documento" name="download" value="true"><i class="fa-solid fa-file-arrow-down"></i></button>
+                                            {% if formacoes %} 
+                                                <button type="submit" class="btn btn-success" id="open_system" title="Abrir novo período" name="novo_periodo" value="true"><i class="fa-solid fa-lock-open"></i></button>
+                                            {% else %}
+                                                <button type="submit" class="btn btn-success" id="close_system" title="Encerrar período e salvar programa" name="salvar_e_fechar" value="true"><i class="fa-solid fa-lock"></i></button>
+                                            {% endif %}
+                                        </div>
+                                    </h4>
+                                    <p class="category my-2">Veja abaixo como se encontra o cálculo atual do PPR</p>
+                                </div>
+                                <div class="content">
+                                    <div class="table-full-width">
+                                        <table class="table">
+                                            {% if not dataset == 'Vazio' %}
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 5%;">Matricula</th>
+                                                        <th style="width: 15%;">Nome</th>
+                                                        <th style="width: 15%;">Cargo</th>
+                                                        <th style="width: 20%;">Setor</th>
+                                                        <th style="width: 20%;">Filial</th>
+                                                        <th style="width: 10%;">Margem</th> 
+                                                        <th style="width: 5%;">Régua</th>
+                                                        <th style="width: 10%;">Total</th>   
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for i in dataset %}
+                                                        <tr>
+                                                            <td>{{i.matricula}}</td>  
+                                                            <td>{{i.funcionario}}</td>  
+                                                            <td>{{i.cargo}}</td> 
+                                                            <td>{{i.setor}}</td>
+                                                            <td>{{i.filial}}</td>                                                     
+                                                            <td>{{i.margem_total|floatformat:2 }}%</td>  
+                                                            <td>{{i.valor_regua}}</td>  
+                                                            <td>R$ {{i.premio_total|floatformat:2}}</td>  
+                                                        </tr>                                         
+                                                    {% endfor %}                                                
+                                                </tbody>
+                                            {% else %}
+                                                <div class="d-flex justify-content-center">
+                                                    <p class="alert-ppr">LUCRO LÍQUIDO GLOBAL NÃO ATINGIU O MÍNIMO PARA CÁCULO!</p>
+                                                </div>                                                
+                                            {% endif %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
